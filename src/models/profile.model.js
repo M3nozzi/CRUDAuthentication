@@ -21,15 +21,15 @@ const profileSchema = new Schema(
             required: true,
         },
 
-        themes: [{
+        courses: [{
             type: String,
             required: true,
         }],
 
-        courses: [{
+        coursesTheme: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref:'Course',
-            required: true,
+            ref:'CourseTheme',
+            
         }],
 
         university: {

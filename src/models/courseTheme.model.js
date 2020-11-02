@@ -2,10 +2,16 @@ const mongoose = require('../database/index');
 const Schema = mongoose.Schema;
 
 
-const courseSchema = new Schema(
+const courseThemeSchema = new Schema(
     {
         name: {
             type: String,
+            required: true,
+        },
+
+        profile: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Profile',
             required: true,
         },
        
@@ -22,6 +28,6 @@ const courseSchema = new Schema(
 );
 
 
-const Course = mongoose.model('Course', courseSchema);
+const CourseTheme = mongoose.model('CourseTheme', courseThemeSchema);
 
-module.exports = Course;
+module.exports = CourseTheme;

@@ -3,7 +3,7 @@ const authMiddleware = require('../middlewares/auth');
 
 const Profile = require('../models/profile.model');
 
-const Course = require('../models/course.model');
+const CourseTheme = require('../models/courseTheme.model');
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.use(authMiddleware);
 router.get('/', async (request, response) => {
 
     try {
-        const profiles = await Profile.find().populate(['user', 'courses'])
+        const profiles = await Profile.find().populate(['user', 'coursesTheme'])
 
         return response.send({ profiles });
         
@@ -25,7 +25,7 @@ router.get('/', async (request, response) => {
 router.get('/:id', async (request, response) => {
 
     try {
-        const profile = await Profile.findById().populate(['user', 'courses'])
+        const profile = await Profile.findById().populate(['user', 'coursesTheme'])
 
         return response.send({ profile });
         
@@ -39,17 +39,19 @@ router.post('/', async (request, response) => {
 
     try {
 
-        const { name, email, themes, university, courses } = request.body;
+        const { name, email, courses, university, coursesTheme } = request.body;
 
-        const profile = await Profile.create({ name, email, themes, university, user: request.userId})
+        const profile = await Profile.create({ name, email, courses, university, user: request.userId });
         
-        await Promise.all(courses.map( async course => {
-            const profileCourse = new Course({ ...course})
-            
+        await Promise.all(coursesTheme.map( async courseTheme => {
+            const profileCourse = new CourseTheme({ ...courseTheme, profile: profile._id})
+            console.log(profileCourse)
             await profileCourse.save();
 
-            profile.courses.push(profileCourse);
+            profile.coursesTheme.push( profileCourse );
         }));
+        await profile.save();
+        return response.send({ profile })
         
     } catch (err) {
         console.log(err)
@@ -71,7 +73,7 @@ router.delete('/:profileId', async(request, response) => {
         return response.send({ message: 'Profile deleted!!!!'});
         
     } catch (err) {
-        return response.status(400).send({ message: 'Error deteling profile'})
+        return response.status(400).send({ message: 'Error deleting profile'})
         
     }
 });
