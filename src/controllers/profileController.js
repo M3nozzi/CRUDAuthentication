@@ -45,7 +45,7 @@ router.post('/', async (request, response) => {
         
         await Promise.all(coursesTheme.map( async courseTheme => {
             const profileCourse = new CourseTheme({ ...courseTheme, profile: profile._id})
-            console.log(profileCourse)
+            
             await profileCourse.save();
 
             profile.coursesTheme.push( profileCourse );
@@ -54,7 +54,7 @@ router.post('/', async (request, response) => {
         return response.send({ profile })
         
     } catch (err) {
-        console.log(err)
+        
         return response.status(400).send({ message: 'Error creating new profile' })
         
     }
