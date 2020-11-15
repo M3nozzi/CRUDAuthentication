@@ -15,6 +15,7 @@ const profileSchema = new Schema(
             lowercase: true,
         },
         path: String,
+        originalName: String,
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',

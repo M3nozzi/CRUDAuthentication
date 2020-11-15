@@ -3,6 +3,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const uploadCloud = require('../config/cloudinary');
+
 const User = require('../models/user.model');
 
 const router = express.Router();

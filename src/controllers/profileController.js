@@ -40,17 +40,23 @@ router.post('/', uploadCloud.single('photo'), async (request, response) => {
 
     try {
 
-        const { name, email, courses, path, university, coursesTheme } = request.body;
+        const { name, email, courses, fileUrl, originalname, university, coursesTheme } = request.body;
+
+        if (fileUrl == "") {
+            
+           fileUrl = 'https://res.cloudinary.com/menozzi/image/upload/v1589934245/focus/undraw_profile_pic_ic5t_ciicvy.svg'
+        }
 
         const profile = await Profile.create({
             name,
             email,
             courses,
-            path: request.fileUrl,
+            path: fileUrl,
+            originalName: originalname,
             university,
             user: request.userId
         });
-        
+
         await Promise.all(coursesTheme.map( async courseTheme => {
             const profileCourse = new CourseTheme({ ...courseTheme, profile: profile._id})
             
@@ -58,12 +64,13 @@ router.post('/', uploadCloud.single('photo'), async (request, response) => {
 
             profile.coursesTheme.push( profileCourse );
         }));
+      
         await profile.save();
         return response.send({ profile })
         
     } catch (err) {
         
-        return response.status(400).send({ message: 'Error creating new profile' })
+        return response.status(400).send({ message: err })
         
     }
 });
