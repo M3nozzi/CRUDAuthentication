@@ -14,7 +14,7 @@ const profileSchema = new Schema(
             required: true,
             lowercase: true,
         },
-
+        path: String,
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',

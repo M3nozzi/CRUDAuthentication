@@ -21,6 +21,8 @@ const userSchema = new Schema(
             required: true,
             select: false, 
         },
+        googleID: String,
+        path: String,
         createdAt: {
             type: Date,
             default: Date.now,

@@ -46,11 +46,6 @@ router.post('/login', async (request, response) => {
         return response.status(400).send({ error: "Invalid password" });
     
     user.password = undefined;
-
-
-    // const token = jwt.sign({ id: user.id }, authConfig.secret, {
-    //     expiresIn: 86400,
-    // });
     
     response.send({
         user,

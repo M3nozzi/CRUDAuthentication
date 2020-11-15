@@ -1,5 +1,6 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/auth');
+const uploadCloud = require('../config/cloudinary');
 
 const Profile = require('../models/profile.model');
 
@@ -35,13 +36,20 @@ router.get('/:id', async (request, response) => {
     }
 });
 
-router.post('/', async (request, response) => {
+router.post('/', uploadCloud.single('photo'), async (request, response) => {
 
     try {
 
-        const { name, email, courses, university, coursesTheme } = request.body;
+        const { name, email, courses, path, university, coursesTheme } = request.body;
 
-        const profile = await Profile.create({ name, email, courses, university, user: request.userId });
+        const profile = await Profile.create({
+            name,
+            email,
+            courses,
+            path: request.fileUrl,
+            university,
+            user: request.userId
+        });
         
         await Promise.all(coursesTheme.map( async courseTheme => {
             const profileCourse = new CourseTheme({ ...courseTheme, profile: profile._id})
